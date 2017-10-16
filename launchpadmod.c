@@ -114,11 +114,16 @@ run(LV2_Handle instance, uint32_t n_samples)
 
     // Initially self->launchpad_out contains a Chunk with size set to capacity
     // Get the capacity
-    //const uint32_t out_capacity = self->launchpad_out->atom.size;
+    const uint32_t out_capacity = self->launchpad_out->atom.size;
 
     // Write an empty Sequence header to the output
     lv2_atom_sequence_clear(self->launchpad_out);
-    //self->launchpad_out->atom.type = self->in_port->atom.type;
+    self->launchpad_out->atom.type = LV2_Atom_Sequence;
+}
+
+static void
+draw(float* level[8])
+{
 }
 
 static void
