@@ -15,7 +15,8 @@
 
 #define LAUNCHPADMOD_URI "http://dealmeida.net/plugins/launchpadmod"
 
-#define DB_CO(g) ((g) > -90.0f ? powf(10.0f, (g)*0.05f) : 0.0f)
+#define RAPID_LED_UPDATE (0x92)
+#define SET_GRID_LED (0x90)
 
 typedef enum {
     MIDI_OUT = 0,
@@ -83,19 +84,8 @@ connect_port(LV2_Handle instance,
 }
 
 static void
-run(LV2_Handle instance, uint32_t n_samples)
+draw(Launchpadmod* self, float level[8])
 {
-    Launchpadmod* self = (Launchpadmod*)instance;
-
-    float level[8];
-    for (int i = 0; i < 8; i++) {
-        level[i] = 0;
-        for (uint32_t pos = 0; pos < n_samples; pos++) {
-            level[i] += abs(self->input[i][pos]);
-        }
-        level[i] /= n_samples;
-    }
-
     // Struct for a 3 byte MIDI event, used for writing notes
     typedef struct
     {
@@ -109,12 +99,23 @@ run(LV2_Handle instance, uint32_t n_samples)
 
     // Write an empty Sequence header to the output
     lv2_atom_sequence_clear(self->launchpad_out);
-    self->launchpad_out->atom.type = LV2_Atom_Sequence;
+    self->launchpad_out->atom.type =
 }
 
 static void
-draw(float* level[8])
+run(LV2_Handle instance, uint32_t n_samples)
 {
+    Launchpadmod* self = (Launchpadmod*)instance;
+
+    float level[8];
+    for (int i = 0; i < 8; i++) {
+        level[i] = 0;
+        for (uint32_t pos = 0; pos < n_samples; pos++) {
+            level[i] += abs(self->input[i][pos]);
+        }
+        level[i] /= n_samples;
+    }
+    draw(self, level);
 }
 
 static void
