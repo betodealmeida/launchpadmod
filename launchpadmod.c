@@ -18,6 +18,20 @@
 #define RAPID_LED_UPDATE (0x92)
 #define SET_GRID_LED (0x90)
 
+#define OFF (0xc)
+#define LOW_RED (0xd)
+#define FULL_RED (0xf)
+#define LOW_AMBER (0x1d)
+#define FULL_AMBER (0x3f)
+#define FULL_YELLOW (0x3e)
+#define LOW_GREEN (0x1c)
+#define FULL_GREEN (0x3c)
+
+#define FLASH_FULL_RED (0xb)
+#define FLASH_FULL_AMBER (0x3b)
+#define FLASH_FULL_YELLOW (0x3a)
+#define FLASH_FULL_GREEN (0x38)
+
 typedef enum {
     MIDI_OUT = 0,
     TRACK_1 = 1,
@@ -100,6 +114,58 @@ draw(Launchpadmod* self, float level[8])
     // Write an empty Sequence header to the output
     lv2_atom_sequence_clear(self->launchpad_out);
     self->launchpad_out->atom.type = self->uris.midi_MidiEvent;
+
+    // Rapid LED updates the 8x8 grid in left-to-right, top-to-bottom order,
+    // then the eight scene launch buttons in top-to-bottom order, and finally
+    // the eight Automap/Live buttons in left-to-right order.
+    int palette[8] = {
+        LOW_GREEN,
+        FULL_GREEN,
+        FULL_YELLOW,
+        LOW_AMBER,
+        FULL_AMBER,
+        LOW_RED,
+        FULL_RED,
+    };
+    int color, z, amplitude, power;
+    int messages[80];
+    for (int i = 0; i < 8; i++) {
+        for (int j = 7; i >= 0; i--) {
+            amplitude = level[i] * sqrt(2);
+            power = amplitude * 9 + 1;
+            z = log10(power) * 7;
+            if (z >= j) {
+                color = palette[j];
+            } else {
+                color = OFF;
+            }
+            messages[i * 8 + (7 - j)] = color;
+        }
+    }
+    for (int i = 0; i < 80; i += 2) {
+        MIDINoteEvent pad;
+        pad.event.time.frames = ev->time.frames;
+        pad.event.body.type = ev->body.type;
+        pad.event.body.size = ev->body.size;
+        pad.msg[0] = RAPID_LED_UPDATE;
+        pad.msg[1] = messages[i];
+        pad.msg[2] = messages[i + 1];
+
+        lv2_atom_sequence_append_event(
+            self->launchpad_out, out_capacity, &pad.event);
+    }
+
+    // Exit rapid LED update mode by resending a value with regular status
+    MIDINoteEvent pad;
+    pad.event.time.frames = ev->time.frames;
+    pad.event.body.type = ev->body.type;
+    pad.event.body.size = ev->body.size;
+    pad.msg[0] = SET_GRID_LED;
+    pad.msg[1] = 0x0;
+    pad.msg[2] = messages[0];
+
+    lv2_atom_sequence_append_event(
+        self->launchpad_out, out_capacity, &pad.event);
 }
 
 static void
