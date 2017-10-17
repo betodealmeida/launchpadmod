@@ -99,7 +99,7 @@ draw(Launchpadmod* self, float level[8])
 
     // Write an empty Sequence header to the output
     lv2_atom_sequence_clear(self->launchpad_out);
-    self->launchpad_out->atom.type =
+    self->launchpad_out->atom.type = self->uris.midi_MidiEvent;
 }
 
 static void
