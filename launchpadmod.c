@@ -130,23 +130,24 @@ draw(Launchpadmod* self, float level[8])
     int color, z, amplitude, power;
     int messages[80];
     for (int i = 0; i < 8; i++) {
-        for (int j = 7; i >= 0; i--) {
-            amplitude = level[i] * sqrt(2);
-            power = amplitude * 9 + 1;
-            z = log10(power) * 7;
+        amplitude = level[i] * sqrt(2);
+        power = amplitude * 9 + 1;
+        z = log10(power) * 7;
+
+        for (int j = 7; j >= 0; j--) {
             if (z >= j) {
                 color = palette[j];
             } else {
                 color = OFF;
             }
-            messages[i * 8 + (7 - j)] = color;
+            messages[j * 8 + i] = color;
         }
     }
     for (int i = 0; i < 80; i += 2) {
         MIDINoteEvent pad;
-        pad.event.time.frames = ev->time.frames;
-        pad.event.body.type = ev->body.type;
-        pad.event.body.size = ev->body.size;
+        pad.event.time.frames = 0;
+        pad.event.body.type = self->uris.midi_MidiEvent;
+        pad.event.body.size = sizeof(messages);
         pad.msg[0] = RAPID_LED_UPDATE;
         pad.msg[1] = messages[i];
         pad.msg[2] = messages[i + 1];
@@ -157,9 +158,9 @@ draw(Launchpadmod* self, float level[8])
 
     // Exit rapid LED update mode by resending a value with regular status
     MIDINoteEvent pad;
-    pad.event.time.frames = ev->time.frames;
-    pad.event.body.type = ev->body.type;
-    pad.event.body.size = ev->body.size;
+    pad.event.time.frames = 0;
+    pad.event.body.type = self->uris.midi_MidiEvent;
+    pad.event.body.size = sizeof(messages);
     pad.msg[0] = SET_GRID_LED;
     pad.msg[1] = 0x0;
     pad.msg[2] = messages[0];

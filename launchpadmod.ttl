@@ -5,66 +5,67 @@
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
 
 <http://dealmeida.net/plugins/launchpadmod>
-        a lv2:Plugin ,
-            lv2:AmplifierPlugin ;
-        lv2:project <http://dealmeida.net/ns/plugins> ;
-		doap:name "Launchpad MOD Duo controller" ;
-        doap:license <http://opensource.org/licenses/isc> ;
-        lv2:optionalFeature lv2:hardRTCapable ;
-        lv2:port [
-				a lv2:OutputPort ,
-                        atom:AtomPort ;
-                atom:bufferType atom:Sequence ;
-                atom:supports midi:MidiEvent ;
-                lv2:index 0 ;
-                lv2:symbol "launchpad" ;
-                lv2:name "Launchpad"
-        ] , [
-				a lv2:AudioPort ,
-                        lv2:InputPort ;
-                lv2:index 1 ;
-                lv2:symbol "track1" ;
-                lv2:name "Track 1"
-        ] , [
-                a lv2:AudioPort ,
-                        lv2:InputPort ;
-                lv2:index 2 ;
-                lv2:symbol "track2" ;
-                lv2:name "Track 2"
-        ] , [
-                a lv2:AudioPort ,
-                        lv2:InputPort ;
-                lv2:index 3 ;
-                lv2:symbol "track3" ;
-                lv2:name "Track 3"
-        ] , [
-                a lv2:AudioPort ,
-                        lv2:InputPort ;
-                lv2:index 4 ;
-                lv2:symbol "track4" ;
-                lv2:name "Track 4"
-        ] , [
-                a lv2:AudioPort ,
-                        lv2:InputPort ;
-                lv2:index 5 ;
-                lv2:symbol "track5" ;
-                lv2:name "Track 5"
-        ] , [
-                a lv2:AudioPort ,
-                        lv2:InputPort ;
-                lv2:index 6 ;
-                lv2:symbol "track6" ;
-                lv2:name "Track 6"
-        ] , [
-                a lv2:AudioPort ,
-                        lv2:InputPort ;
-                lv2:index 7 ;
-                lv2:symbol "track7" ;
-                lv2:name "Track 7"
-        ] , [
-                a lv2:AudioPort ,
-                        lv2:InputPort ;
-                lv2:index 8 ;
-                lv2:symbol "track8" ;
-                lv2:name "Track 8"
-        ] .
+a lv2:Plugin ,
+lv2:AmplifierPlugin ;
+lv2:project <http://dealmeida.net/ns/plugins> ;
+doap:name "Launchpad MOD Duo controller" ;
+doap:license <http://opensource.org/licenses/isc> ;
+lv2:requiredFeature urid:map ;
+lv2:optionalFeature lv2:hardRTCapable ;
+lv2:port [
+a lv2:OutputPort ,
+atom:AtomPort ;
+atom:bufferType atom:Sequence ;
+atom:supports midi:MidiEvent ;
+lv2:index 0 ;
+lv2:symbol "launchpad" ;
+lv2:name "Launchpad"
+] , [
+a lv2:AudioPort ,
+lv2:InputPort ;
+lv2:index 1 ;
+lv2:symbol "track1" ;
+lv2:name "Track 1"
+] , [
+a lv2:AudioPort ,
+lv2:InputPort ;
+lv2:index 2 ;
+lv2:symbol "track2" ;
+lv2:name "Track 2"
+] , [
+a lv2:AudioPort ,
+lv2:InputPort ;
+lv2:index 3 ;
+lv2:symbol "track3" ;
+lv2:name "Track 3"
+] , [
+a lv2:AudioPort ,
+lv2:InputPort ;
+lv2:index 4 ;
+lv2:symbol "track4" ;
+lv2:name "Track 4"
+] , [
+a lv2:AudioPort ,
+lv2:InputPort ;
+lv2:index 5 ;
+lv2:symbol "track5" ;
+lv2:name "Track 5"
+] , [
+a lv2:AudioPort ,
+lv2:InputPort ;
+lv2:index 6 ;
+lv2:symbol "track6" ;
+lv2:name "Track 6"
+] , [
+a lv2:AudioPort ,
+lv2:InputPort ;
+lv2:index 7 ;
+lv2:symbol "track7" ;
+lv2:name "Track 7"
+] , [
+a lv2:AudioPort ,
+lv2:InputPort ;
+lv2:index 8 ;
+lv2:symbol "track8" ;
+lv2:name "Track 8"
+] .
